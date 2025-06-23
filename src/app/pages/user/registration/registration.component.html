@@ -1,0 +1,144 @@
+<main class="multi-step-container">
+    <div class="logo-wrapper">
+     <img src="assets/logo.svg" alt="logo" class="logo" />
+    </div>
+
+    <!-- Pasek postępu -->
+    <div class="progress-bar-container">
+        <div class="progress-bar" [style.width.%]="(carouselIndex + 1) * 33.33"></div>
+    </div>
+  <!-- Header -->
+  <section class="step-header">
+    <button
+      mat-icon-button
+      class="back-btn"
+      [disabled]="carouselIndex === 0"
+      (click)="onBack()"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <div class="step-title">
+      <h3>{{ getStepTitle() }}</h3>
+    </div>
+  </section>
+
+  <!-- Step Form -->
+  <section class="form-section">
+    <form *ngIf="carouselIndex === 0" [formGroup]="formStep1" class="form-container">
+<mat-form-field appearance="fill" class="w-100">
+  <mat-label>Email</mat-label>
+  <input matInput formControlName="email" type="email" />
+
+  <mat-error *ngIf="hasDisplayableError(formStep1, 'email') && formStep1.get('email')?.hasError('required')">
+    Email is required.
+  </mat-error>
+
+  <mat-error *ngIf="hasDisplayableError(formStep1, 'email') && formStep1.get('email')?.hasError('email')">
+    Please enter a valid email address.
+  </mat-error>
+</mat-form-field>
+    </form>
+
+    <form *ngIf="carouselIndex === 1" [formGroup]="formStep2" class="form-container">
+ <mat-form-field appearance="fill" class="w-100">
+  <mat-label>Hasło</mat-label>
+ <input
+  matInput
+  [type]="hide ? 'password' : 'text'"
+  formControlName="password"
+  autocomplete="new-password"
+  (input)="checkPassword()"
+/>
+  <button
+    mat-icon-button
+    matSuffix
+    type="button"
+    (click)="hide = !hide"
+    aria-label="Toggle password visibility"
+  >
+    <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+  </button>
+  <mat-hint align="start" class="password-hint">
+<div [ngClass]="{ passed: hasLetter, failed: !hasLetter && (formStep2.get('password')?.touched || isSubmitted) }">
+
+      <mat-icon class="icon">{{ hasLetter ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+      1 literę
+    </div>
+<div [ngClass]="{ passed: hasNumberOrSpecial, failed: !hasNumberOrSpecial && (formStep2.get('password')?.touched || isSubmitted) }">
+
+      <mat-icon class="icon">{{ hasNumberOrSpecial ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+      1 cyfrę lub znak specjalny (np. #, ?, !, &)
+    </div>
+<div [ngClass]="{ passed: hasMinLength, failed: !hasMinLength && (formStep2.get('password')?.touched || isSubmitted) }">
+
+      <mat-icon class="icon">{{ hasMinLength ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+      8 znaków
+    </div>
+  </mat-hint>
+</mat-form-field>
+
+    </form>
+
+    <form *ngIf="carouselIndex === 2" [formGroup]="formStep3" class="form-container" (ngSubmit)="submitAll()">
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" />
+      </mat-form-field>
+        <div class="birthdate-fields">
+        <mat-form-field appearance="fill" class="birth-field day">
+            <mat-label>dd</mat-label>
+            <input matInput type="number" formControlName="day" min="1" max="31" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="birth-field month">
+            <mat-label>Month</mat-label>
+            <mat-select formControlName="month">
+            <mat-option *ngFor="let m of months" [value]="m.value">{{m.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="birth-field year">
+            <mat-label>rrrr</mat-label>
+            <input matInput type="number" formControlName="year" min="1900" [max]="currentYear" />
+        </mat-form-field>
+        </div>
+
+        <div class="gender-group">
+            <label class="gender-label">Gender</label>
+            <p class="gender-description">
+                Information about your gender allows us to offer personalized content, recommendations, and advertisements.
+            </p>
+
+            <mat-radio-group formControlName="gender" class="gender-options" aria-label="Choose gender">
+                <mat-radio-button class="gender-option" value="male">Man</mat-radio-button>
+                <mat-radio-button class="gender-option" value="female">Woman</mat-radio-button>
+                <mat-radio-button class="gender-option" value="nonbinary">Nonbinary</mat-radio-button>
+                <mat-radio-button class="gender-option" value="other">Other</mat-radio-button>
+                <mat-radio-button class="gender-option" value="">Don't wanna say</mat-radio-button>
+            </mat-radio-group>
+        </div>
+    </form>
+  </section>
+
+  <!-- Controls -->
+  <section class="form-controls">
+    <button
+      mat-raised-button
+      color="primary"
+      *ngIf="carouselIndex < 2"
+      (click)="onNext()"
+    >
+      Next
+    </button>
+
+    <button
+      mat-raised-button
+      color="accent"
+      *ngIf="carouselIndex === 2"
+      (click)="submitAll()"
+    >
+      Register
+    </button>
+  </section>
+</main>
