@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbCarousel, NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,6 +9,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRadioModule } from '@angular/material/radio';
 import { AuthService } from '../../../shared/services/auth.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-registration',
@@ -17,22 +21,33 @@ import { AuthService } from '../../../shared/services/auth.service';
     CommonModule,
     NgbCarouselModule,
     ReactiveFormsModule,
-    MatFormFieldModule,   // <-- wymagany do <mat-form-field>
-    MatInputModule,       // <-- wymagany do <input matInput>
-    MatSelectModule,      // <-- wymagany do <mat-select>
-    MatButtonModule,      // <-- wymagany do <button mat-button>
+    MatFormFieldModule,   
+    MatInputModule,       
+    MatSelectModule,     
+    MatButtonModule,    
     MatIconModule,
-    MatRadioModule,       // <-- wymagany do <mat-radio-group>
+    MatRadioModule,    
+    MatDatepickerModule,
+    MatNativeDateModule,
+    TranslatePipe,
+    RouterLink
   ],
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent {
 @ViewChild('carousel', { static: true }) carousel!: NgbCarousel;
+@Output() registrationSuccess = new EventEmitter<void>();
+@Output() switchToLogin = new EventEmitter<void>();
 
   formStep1!: FormGroup;
   formStep2!: FormGroup;
   formStep3!: FormGroup;
+
+  isSubmittedStep1 = false;
+  isSubmittedStep2 = false;
+  isSubmittedStep3 = false;
+
 
   carouselIndex = 0;
   btnDisabled = false;
@@ -52,9 +67,7 @@ export class RegistrationComponent {
     });
     this.formStep3 = this.fb.group({
       username: ['', Validators.required],
-      day: ['',[Validators.required, Validators.min(1), Validators.max(31)]],
-      month: ['', Validators.required],
-      year: ['', [Validators.required, Validators.min(1900), Validators.max(new Date().getFullYear())]],
+      dateOfBirth: ['', Validators.required],
       gender: ['', Validators.required],
     });
 
@@ -72,51 +85,51 @@ getStepTitle(): string {
 onNext() {
   const currentForm = this.getCurrentForm();
 
+  if (this.carouselIndex === 0) this.isSubmittedStep1 = true;
+  if (this.carouselIndex === 1) this.isSubmittedStep2 = true;
+
   if (currentForm.invalid) {
     currentForm.markAllAsTouched();
-    this.isSubmitted = true;
     return;
   }
 
   this.carouselIndex++;
 }
+
 getCurrentForm(): FormGroup {
   switch (this.carouselIndex) {
     case 0: return this.formStep1;
     case 1: return this.formStep2;
     case 2: return this.formStep3;
-    default: return this.formStep1; // Fallback
+    default: return this.formStep1;
   }
 }
 
 onBack() {
   if (this.carouselIndex > 0) this.carouselIndex--;
 }
-isSubmitted = false;
 
 submitAll() {
-  this.isSubmitted = true;
+  this.isSubmittedStep3 = true;
 
   if (
-    this.formStep1.valid &&
-    this.formStep2.valid &&
-    this.formStep3.valid
+    this.isSubmittedStep3
   ) {
-    const { day, month, year, gender, username } = this.formStep3.value;
-
-    const birthdate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const { dateOfBirth, gender, username } = this.formStep3.value;
 
     const formData = {
-      username,
-      password: this.formStep2.value.password,
-      email: this.formStep1.value.email,
-      gender,
-      birthdate // <-- teraz jeden string zamiast day/month/year
+      Username: this.formStep1.value.email, // backend traktuje to jako Username
+      Password: this.formStep2.value.password,
+      Gender: gender,
+      DateOfBirth: dateOfBirth, // JS Date -> JSON -> C# DateTime
+      City: '' // jeśli nie masz w formularzu
     };
+
 
     this.service.createUser(formData).subscribe({
       next: (res) => {
         console.log('Registration successful:', res);
+        this.registrationSuccess.emit();
       },
       error: (err) => {
         console.error('Registration failed:', err);
@@ -145,10 +158,12 @@ months = [
 ];
 
 currentYear = new Date().getFullYear();
-public hasDisplayableError(form: FormGroup, controlName: string): boolean {
+
+public hasDisplayableError(form: FormGroup, controlName: string, submitted: boolean): boolean {
   const control = form.get(controlName);
-  return !!control && control.invalid && (control.touched || this.isSubmitted);
+  return !!control && control.invalid && (submitted || control.touched);
 }
+
 hide = true;
 hasLetter = false;
 hasNumberOrSpecial = false;
@@ -160,5 +175,4 @@ checkPassword(): void {
   this.hasNumberOrSpecial = /[\d!@#$%^&*(),.?":{}|<>]/.test(value);
   this.hasMinLength = value.length >= 8;
 }
-
 }

@@ -1,0 +1,57 @@
+<main class="multi-step-container">
+  <div class="logo-wrapper">
+    <img src="assets/logo.png" alt="logo" class="logo"/>
+  </div>
+
+  <section class="form-section">
+    <form [formGroup]="form" class="form-container">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{ 'EMAIL_LABEL' | translate }}</mat-label>
+        <input matInput formControlName="email" type="email" />
+
+        <mat-error *ngIf="hasDisplayableError('email') && form.get('email')?.hasError('required')">
+          {{ 'EMAIL_REQUIRED' | translate }}
+        </mat-error>
+
+        <mat-error *ngIf="hasDisplayableError('email') && form.get('email')?.hasError('email')">
+          {{ 'EMAIL_INVALID' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{ 'PASSWORD_LABEL' | translate }}</mat-label>
+        <input
+          matInput
+          [type]="hide ? 'password' : 'text'"
+          formControlName="password"
+          autocomplete="current-password"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="hide = !hide"
+        >
+          <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+
+        <mat-error *ngIf="hasDisplayableError('password')">
+          {{ 'PASSWORD_REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </section>
+
+  <section class="form-controls">
+    <button mat-raised-button color="accent" (click)="onLogin()">
+      {{ 'LOGIN_BUTTON' | translate }}
+    </button>
+  </section>
+
+  <section class="account-description">
+    <div>{{ 'NO_ACCOUNT' | translate }}</div>
+    <button mat-button color="accent" [routerLink]="['/user/register']">
+      {{ 'REGISTER_BUTTON' | translate }}
+    </button>
+  </section>
+</main>

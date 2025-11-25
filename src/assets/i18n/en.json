@@ -1,0 +1,32 @@
+{
+  "EMAIL_LABEL": "Email",
+  "EMAIL_REQUIRED": "Email is required.",
+  "EMAIL_INVALID": "Please enter a valid email address.",
+  "PASSWORD_LABEL": "Password",
+  "PASSWORD_REQUIRED": "Password is required.",
+  "HIDE_PASSWORD": "Hide password",
+  "SHOW_PASSWORD": "Show password",
+  "LOGIN_BUTTON": "Login",
+  "NO_ACCOUNT": "Don't have an account?",
+  "REGISTER_BUTTON": "Register",
+
+  "BACK_BUTTON": "Back",
+  "PASSWORD_REQUIRE_LETTER": "At least 1 uppercase or lowercase letter",
+  "PASSWORD_REQUIRE_NUMBER": "At least 1 number or special character",
+  "PASSWORD_REQUIRE_LENGTH": "At least 8 characters",
+  "USERNAME_LABEL": "Username",
+  "DATE_OF_BIRTH_LABEL": "Date of birth",
+  "DATE_OF_BIRTH_PLACEHOLDER": "Select date",
+  "DATE_OF_BIRTH_REQUIRED": "Date of birth is required.",
+  "GENDER_LABEL": "Gender",
+  "GENDER_DESCRIPTION": "Information about your gender allows us to offer personalized content, recommendations, and advertisements.",
+  "GENDER_ARIA": "Choose gender",
+  "GENDER_MALE": "Man",
+  "GENDER_FEMALE": "Woman",
+  "GENDER_NONBINARY": "Nonbinary",
+  "GENDER_OTHER": "Other",
+  "GENDER_PREFER_NOT": "Prefer not to say",
+  "NEXT_BUTTON": "Next",
+  "ALREADY_HAVE_ACCOUNT": "Already have an account?"
+
+}

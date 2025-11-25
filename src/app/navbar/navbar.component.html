@@ -1,0 +1,23 @@
+<nav class="navbar">
+    <div class="navbar-left">
+        <ng-container *ngIf="!isLoggedIn">
+            <button class="nav-btn" (click)="navigateTo('/discover')">Odkrywaj</button>
+        </ng-container>
+    </div>
+
+    <div class="navbar-logo" *ngIf="isLoggedIn">
+      <img src="assets/logo.png" alt = "Logo" class ="logo"/>
+    </div>
+    
+    <div class="navbar-right">
+      <ng-container *ngIf="isLoggedIn">
+            <button class="nav-btn profile" (click)="navigateTo('/profile')">
+            Profil
+            </button>
+        </ng-container>
+            <ng-container *ngIf="!isLoggedIn && showAuthButtons()">
+            <button class="nav-btn" (click)="navigateTo('/user/login')">Zaloguj się</button>
+            <button class="nav-btn primary" (click)="navigateTo('/user/register')">Zarejestruj się</button>
+      </ng-container>
+    </div>
+</nav>

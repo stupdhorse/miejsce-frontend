@@ -1,13 +1,14 @@
+<!-- user.component.html -->
 <div class="container">
-    <div class="row vh-100 align-items-center">
-        <div class="col-10 offset-1 col-lg-6 offset-lg-3 col-xxl-4 offset-xxl-4">
-            <div class="rounded-4 border-0 shadow-lg bg-white" style="min-height: 450px;">
-                <div class="d-flex justify-content-start">
-                    <div class="p-4 w-100">
-                        <app-registration></app-registration>
-                    </div>
-                </div>
-            </div>
+  <div class="row vh-100 align-items-center">
+    <div class="col-10 offset-1 col-lg-6 offset-lg-3 col-xxl-4 offset-xxl-4">
+      <div class="rounded-4 border-0 shadow-lg bg-white" style="min-height: 450px;">
+        <div class="d-flex justify-content-start">
+          <div class="p-4 w-100">
+            <router-outlet></router-outlet>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
