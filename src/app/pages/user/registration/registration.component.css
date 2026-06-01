@@ -78,10 +78,26 @@ mat-form-field {
   display: flex;
   align-items: center;
 }
+.criteria-header {
+  margin: 0 0 0.5rem 0;
+  font-weight: 500;
+  color: #666;
+}
+
+.criteria-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
 
 .icon {
-  font-size: 1rem;
+  font-size: 18px;
+  width: 18px;          /* SZEROKOŚĆ musi być równa font-size*/
+  height: 18px;         /* WYSOKOŚĆ musi być równa font-size */
   margin-right: 0.5rem;
+  flex-shrink: 0;
+  overflow: visible;
 }
 
 .passed {
@@ -104,10 +120,3 @@ mat-form-field {
   background-color: #1ed760;
   transition: width 0.3s ease-in-out;
 }
-
-/* ::ng-deep .mat-form-field-appearance-fill.mat-form-field .mat-form-field-flex {
-  background-color: white !important;
-}
-::ng-deep .mat-form-field-appearance-fill.mat-form-field.mat-form-field-invalid .mat-form-field-flex {
-  background-color: white !important;
-} */

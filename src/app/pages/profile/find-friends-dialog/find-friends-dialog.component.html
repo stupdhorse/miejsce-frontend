@@ -1,0 +1,70 @@
+<h2 mat-dialog-title>{{ 'FRIENDS_DIALOG.TITLE' | translate }}</h2>
+
+<mat-dialog-content>
+  <div class="search-container d-flex gap-2 align-items-center">
+    
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'FRIENDS_DIALOG.INPUT_LABEL' | translate }}</mat-label>
+      
+      <input 
+        matInput 
+        [(ngModel)]="searchQuery" 
+        (keydown.enter)="!(!searchQuery) && performSearch()"
+      >
+      
+      <button 
+        mat-icon-button 
+        matSuffix 
+        (click)="performSearch()" 
+        [disabled]="!searchQuery"
+        [matTooltip]="'COMMON.SEARCH' | translate"
+      >
+        <mat-icon>search</mat-icon>
+      </button>
+
+    </mat-form-field>
+
+  </div>
+
+  <div class="users-list mt-3">
+    <div *ngIf="isLoading" class="text-center text-muted">
+      {{ 'COMMON.LOADING' | translate }}
+    </div>
+
+    <div *ngIf="!isLoading && !hasSearched" class="text-center text-muted p-4">
+      <mat-icon style="font-size: 48px; width: 48px; height: 48px; opacity: 0.5;">people_outline</mat-icon>
+      <p class="mt-2">{{ 'FRIENDS_DIALOG.EMPTY_STATE_TITLE' | translate }}</p>
+    </div>
+
+    <div *ngIf="!isLoading && hasSearched && foundUsers.length === 0" class="text-center text-muted">
+     {{ 'FRIENDS_DIALOG.NO_RESULTS' | translate:{query: searchQuery} }}
+    </div>
+
+    <div *ngFor="let user of foundUsers" class="d-flex align-items-center justify-content-between mb-3 p-2 border-bottom">
+      
+      <div class="d-flex align-items-center gap-3">
+        <img [src]="(user.basicInfo?.avatarUrl || 'assets/default-avatar.png') | imageUrl" 
+             class="rounded-circle" 
+             style="width: 40px; height: 40px; object-fit: cover;"
+             alt="Avatar">
+        
+        <div>
+          <h6 class="m-0 fw-bold">{{ user.basicInfo?.username || 'Użytkownik' }}</h6>
+          <small class="text-muted" *ngIf="user.basicInfo?.firstName || user.basicInfo?.lastName">
+            {{ user.basicInfo?.firstName }} {{ user.basicInfo?.lastName }}
+          </small>
+        </div>
+      </div>
+
+      <button mat-icon-button color="primary" (click)="addFriend(user.id)">
+        <mat-icon>person_add</mat-icon>
+      </button>
+
+    </div>
+
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">{{ 'COMMON.CLOSE' | translate }}</button>
+</mat-dialog-actions>

@@ -1,0 +1,73 @@
+<div class="dialog-container">
+  <div class="image-header" *ngIf="event.imageUrl" [style.backgroundImage]="'url(' + (event.imageUrl | imageUrl) + ')'">
+    <button mat-icon-button class="close-btn" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <div class="price-badge" *ngIf="event.price !== undefined">
+      {{ event.price === 0 ? ('COMMON.FREE' | translate) : event.price + ' ' + ('COMMON.PLN' | translate) }}
+    </div>
+  </div>
+
+  <div class="dialog-content">
+    
+    <div class="d-flex justify-content-end align-items-center mb-3">
+      <span class="text-muted small">
+        <div class="d-flex align-items-center gap-1">
+          <mat-icon class="align-middle small-icon">schedule</mat-icon>
+          <span>
+            {{ event.startTime | date:'HH:mm dd.MM.yyyy' }} 
+            - {{ event.endTime | date:'HH:mm dd.MM.yyyy' }}
+          </span>
+        </div>
+      </span>
+    </div>
+
+    <h2 class="dialog-title">{{ event.title }}</h2>
+
+    <p class="text-muted mb-4 d-flex align-items-center gap-1">
+      <mat-icon class="text-pink small-icon">location_on</mat-icon> 
+      {{ event.city }}
+    </p>
+
+    <div class="stats-box mb-4">
+      <div class="d-flex align-items-center gap-2 text-pink fw-bold">
+        <mat-icon>{{ event.isInterested || isOwner ? 'favorite' : 'favorite_border' }}</mat-icon>
+        <span>{{ event.interestCount || 0 }} {{ 'EVENT.INTERESTED_COUNT' | translate }}</span>
+      </div>
+    </div>
+
+    <h4 class="section-header">{{ 'EVENT.DESCRIPTION_HEADER' | translate }}</h4>
+    <p class="description-text">
+      {{ event.description || ('EVENT.NO_DESCRIPTION' | translate) }}
+    </p>
+  </div>
+
+  <div class="dialog-actions d-flex justify-content-between align-items-center">
+    
+    <div class="d-flex gap-2">
+      <button mat-stroked-button (click)="onClose()">{{ 'COMMON.CLOSE' | translate }}</button>
+      
+      <button *ngIf="isOwner" 
+              mat-stroked-button 
+              color="primary" 
+              (click)="onEdit()">
+        <mat-icon>edit</mat-icon> {{ 'COMMON.EDIT' | translate }}
+      </button>
+    </div>
+
+    <div *ngIf="isOwner" class="d-flex align-items-center text-muted px-3" style="background: #f5f5f5; border-radius: 20px; padding: 5px;">
+        <mat-icon class="me-2 text-primary">person</mat-icon>
+        <span class="fw-bold small">{{ 'EVENT.YOU_ARE_ORGANIZER' | translate }}</span>
+    </div>
+
+    <button 
+      *ngIf="!isOwner"
+      mat-flat-button 
+      [color]="event.isInterested ? 'warn' : 'primary'" 
+      (click)="toggleInterest()">
+      <mat-icon class="me-2">{{ event.isInterested ? 'favorite' : 'favorite_border' }}</mat-icon>
+      {{ (event.isInterested ? 'EVENT.WATCHING_BUTTON' : 'EVENT.JOIN_BUTTON') | translate }}
+    </button>
+    
+  </div>
+</div>

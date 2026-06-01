@@ -1,0 +1,225 @@
+<div class="discover-container container-fluid">
+  <div class="row">
+    
+    <aside *ngIf="isSidebarOpen" class="col-lg-2 sidebar p-3 border-end">
+      
+      <div class="d-flex justify-content-between align-items-center mb-3 mt-1">
+        <h4 class="m-0 fs-5">{{ 'DISCOVER.FILTERS_TITLE' | translate }}</h4>
+        <button mat-icon-button (click)="toggleSidebar()" class="d-lg-none">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <form [formGroup]="filterForm" class="d-flex flex-column gap-2">
+        
+        <mat-form-field appearance="outline" class="density-compact">
+          <mat-label>{{ 'DISCOVER.CATEGORY_LABEL' | translate }}</mat-label>
+          <mat-select formControlName="categories" multiple>
+            <mat-option *ngFor="let cat of categories" [value]="cat">{{cat}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="density-compact">
+          <mat-label>{{ 'DISCOVER.CITY_LABEL' | translate }}</mat-label>
+          <mat-select formControlName="city">
+            <mat-option value="">{{ 'DISCOVER.CITY_ALL' | translate }}</mat-option>
+            <mat-option *ngFor="let city of cities" [value]="city">{{city}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="density-compact">
+          <mat-label>{{ 'DISCOVER.DATE_RANGE_LABEL' | translate }}</mat-label>
+          <mat-date-range-input [rangePicker]="picker" [min]="getMinDate()">
+            <input matStartDate formControlName="dateFrom" [placeholder]="'DISCOVER.DATE_FROM' | translate">
+            <input matEndDate formControlName="dateTo" [placeholder]="'DISCOVER.DATE_TO' | translate">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+
+        <div class="price-filter mt-2">
+          <label class="form-label small mb-1">
+             {{ 'DISCOVER.PRICE_MAX_LABEL' | translate:{ value: filterForm.get('priceMax')?.value } }}
+          </label>
+          <mat-slider min="0" max="1000" step="10" discrete [disabled]="filterForm.get('onlyFree')?.value" class="w-100">
+            <input matSliderThumb formControlName="priceMax">
+          </mat-slider>
+          
+          <mat-checkbox formControlName="onlyFree" class="small-checkbox">
+             {{ 'DISCOVER.ONLY_FREE_LABEL' | translate }}
+          </mat-checkbox>
+        </div>
+
+        <button mat-stroked-button color="accent" (click)="resetFilters()" *ngIf="isFilteredMode" class="mt-2 w-100">
+          {{ 'COMMON.CLEAR' | translate }}
+        </button>
+
+      </form>
+    </aside>
+
+    <main [ngClass]="{'col-lg-10': isSidebarOpen, 'col-12': !isSidebarOpen}" class="p-0 transition-width">
+      
+      <div class="top-bar d-flex justify-content-between align-items-center py-2 px-4 border-bottom sticky-top">
+        
+        <div class="d-flex align-items-center gap-3">
+          <button mat-icon-button (click)="toggleSidebar()" matTooltip="Pokaż/Ukryj filtry">
+            <mat-icon>{{ isSidebarOpen ? 'menu_open' : 'tune' }}</mat-icon>
+          </button>
+        </div>
+
+        <div class="search-bar-container flex-grow-1 mx-3 mx-lg-5">
+          <mat-form-field appearance="outline" class="w-100 density-compact search-field">
+            <mat-icon matPrefix class="text-pink">search</mat-icon>
+            <input 
+              matInput 
+              [formControl]="$any(filterForm).get('searchQuery')" 
+              [placeholder]="'COMMON.SEARCH' | translate"
+            >
+            <button 
+              *ngIf="filterForm.get('searchQuery')?.value" 
+              matSuffix mat-icon-button aria-label="Clear" 
+              (click)="filterForm.get('searchQuery')?.setValue('')"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          <span class="text-muted small">{{ 'DISCOVER.SORT_LABEL' | translate }}</span>
+          <mat-form-field appearance="outline" class="sort-select mb-0 density-compact">
+            <mat-select [(value)]="selectedSort" (selectionChange)="onSortChange($event.value)">
+              <mat-option *ngFor="let opt of sortOptions" [value]="opt.value">
+                {{ opt.label | translate }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+      </div>
+
+      <div class="content-area p-4">
+        
+        <div *ngIf="isLoading" class="skeleton-container">
+          
+          <div class="skeleton-section">
+            <div class="skeleton-title"></div> <div class="skeleton-row">
+              <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5]">
+                <div class="skeleton-card-img"></div>
+                <div class="skeleton-card-body">
+                  <div class="skeleton-text-line w-80"></div>
+                  <div class="skeleton-text-line w-60"></div>
+                  <div class="skeleton-text-line w-40 mt-2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="skeleton-section">
+            <div class="skeleton-title"></div>
+            
+            <div class="skeleton-row">
+              <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5]">
+                <div class="skeleton-card-img"></div>
+                <div class="skeleton-card-body">
+                  <div class="skeleton-text-line w-80"></div>
+                  <div class="skeleton-text-line w-60"></div>
+                  <div class="skeleton-text-line w-40 mt-2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-container *ngIf="!isLoading">
+          
+          <ng-container *ngIf="!isFilteredMode">
+            
+            <ng-container *ngIf="isLoggedIn">
+              
+              <section class="mb-5 position-relative">
+                <h3 class="section-title mb-3">{{ 'DISCOVER.SECTION_RECOMMENDED' | translate }}</h3>
+                
+                <div class="list-wrapper" *ngIf="recommendedEvents.length > 0; else noRecommendations">
+                  <button mat-mini-fab class="scroll-btn left" (click)="scrollList(recList, 'left')">
+                    <mat-icon>chevron_left</mat-icon>
+                  </button>
+                  <div class="horizontal-scroll-container" #recList>
+                    <div class="event-card-wrapper" *ngFor="let event of recommendedEvents">
+                      <app-event-card-mini [event]="event" (click)="openEventDetails(event)" (deleted)="onEventDeleted($event)"></app-event-card-mini>
+                    </div>
+                  </div>
+                  <button mat-mini-fab class="scroll-btn right" (click)="scrollList(recList, 'right')">
+                    <mat-icon>chevron_right</mat-icon>
+                  </button>
+                </div>
+
+                <ng-template #noRecommendations>
+                  <div class="p-4 border rounded text-center text-muted bg-white">
+                    <mat-icon>sentiment_satisfied</mat-icon>
+                    <p class="m-0 mt-2">{{ 'DISCOVER.NO_RECOMMENDATIONS' | translate }}</p>
+                  </div>
+                </ng-template>
+              </section>
+
+            </ng-container>
+            <section class="mb-5 position-relative">
+              <h3 class="section-title mb-3">{{ 'DISCOVER.SECTION_TRENDING' | translate }}</h3>
+              
+              <div class="list-wrapper">
+                <button mat-mini-fab class="scroll-btn left" (click)="scrollList(trendList, 'left')">
+                  <mat-icon>chevron_left</mat-icon>
+                </button>
+
+                <div class="horizontal-scroll-container" #trendList>
+                  <div class="event-card-wrapper" *ngFor="let event of trendingEvents">
+                    <app-event-card-mini [event]="event" (click)="openEventDetails(event)" (deleted)="onEventDeleted($event)"></app-event-card-mini>
+                  </div>
+                </div>
+
+                <button mat-mini-fab class="scroll-btn right" (click)="scrollList(trendList, 'right')">
+                  <mat-icon>chevron_right</mat-icon>
+                </button>
+              </div>
+            </section>
+
+            <section class="mb-5 position-relative" *ngFor="let group of categorizedEvents">
+              <h3 class="section-title mb-3">{{ group.category }}</h3>
+              
+              <div class="list-wrapper">
+                <button mat-mini-fab class="scroll-btn left" (click)="scrollList(catList, 'left')">
+                  <mat-icon>chevron_left</mat-icon>
+                </button>
+
+                <div class="horizontal-scroll-container" #catList>
+                  <div class="event-card-wrapper" *ngFor="let event of group.events">
+                    <app-event-card-mini [event]="event" (click)="openEventDetails(event)" (deleted)="onEventDeleted($event)"></app-event-card-mini>
+                  </div>
+                </div>
+
+                <button mat-mini-fab class="scroll-btn right" (click)="scrollList(catList, 'right')">
+                  <mat-icon>chevron_right</mat-icon>
+                </button>
+              </div>
+            </section>
+          </ng-container>
+
+          <ng-container *ngIf="isFilteredMode">
+            <div class="row g-3">
+              <div class="col-6 col-md-4 col-lg-3 col-xxl-2" *ngFor="let event of filteredEvents">
+                <app-event-card-mini [event]="event" [fullWidth]="true" (click)="openEventDetails(event)" (deleted)="onEventDeleted($event)"></app-event-card-mini>
+              </div>
+              
+              <div *ngIf="filteredEvents.length === 0" class="col-12 text-center mt-5">
+                <mat-icon class="display-1 text-muted">search_off</mat-icon>
+                <p class="h4 text-muted mt-3">{{ 'DISCOVER.NO_RESULTS' | translate }}</p>
+              </div>
+            </div>
+          </ng-container>
+
+        </ng-container>
+
+      </div>
+    </main>
+  </div>
+</div>

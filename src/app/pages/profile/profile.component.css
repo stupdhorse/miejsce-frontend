@@ -1,0 +1,185 @@
+/* --- HEADER (Odzworowanie Spotify) --- */
+.profile-header {
+  background: linear-gradient(to bottom, #ff94d4, #ffbfe6);
+  color: #4a002e; 
+  padding: 80px 0 40px 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.header-content {
+  display: flex;
+  align-items: flex-end;
+  gap: 2rem;
+}
+
+/* Avatar */
+.avatar-wrapper {
+  width: 232px;
+  height: 232px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  background-color: #333;
+  flex-shrink: 0;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Info użytkownika */
+.label {
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.username {
+  font-size: 6rem;
+  font-weight: 900;
+  margin: -0.1em 0 0.1em -0.05em;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.user-stats {
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dot { font-size: 0.8rem; }
+
+/* Responsive dla Headera */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .avatar-wrapper { width: 180px; height: 180px; }
+  .username { font-size: 3rem; }
+  .ms-auto { margin-left: 0 !important; margin-top: 1rem; }
+}
+
+/* --- SIDEBAR OVERLAY (ZMODYFIKOWANE) --- */
+.sidebar {
+  position: fixed; /* Wyjęcie z przepływu - unosi się nad stroną */
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 300px;
+  
+  background-color: #ffbfe6; /* Pink 100 */
+  color: #660040;          /* Tekst */
+  border-right: 1px solid #ff94d4;
+  box-shadow: 4px 0 15px rgba(0,0,0,0.2); /* Cień oddzielający */
+  
+  z-index: 1050; /* Musi być bardzo wysoko (powyżej navbara i treści) */
+  padding-top: 2rem;
+  overflow-y: auto;
+  
+  /* Opcjonalna animacja wjazdu */
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+/* Tło przyciemniające pod sidebarem */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1040; /* Pod sidebarem (1050), ale nad stroną */
+  backdrop-filter: blur(2px);
+}
+
+/* Przyciski w sidebarze */
+.sidebar-btn {
+  width: 100%;
+  justify-content: flex-start;
+  margin-bottom: 0.5rem;
+  color: #660040 !important;
+}
+
+.sidebar-btn mat-icon { margin-right: 12px; }
+
+/* --- SEKCJE PRZYJACIELE I WYDARZENIA (Bez zmian) --- */
+.friends-grid {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
+}
+.friends-grid::-webkit-scrollbar { display: none; }
+
+.friend-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 160px;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 1rem;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.friend-item:hover { background-color: rgba(0,0,0,0.05); }
+
+.friend-avatar-wrapper {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.friend-avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+.friend-name {
+  font-weight: 700; font-size: 1rem; color: #333;
+  text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;
+}
+.friend-role { font-size: 0.85rem; color: #666; }
+
+.section-title { font-weight: 700; font-size: 1.5rem; color: #003b1e; }
+
+.list-wrapper { position: relative; }
+
+.horizontal-scroll-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.5rem;
+  padding: 10px 4px 20px 4px;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+.horizontal-scroll-container::-webkit-scrollbar { display: none; }
+
+.event-card-wrapper { flex: 0 0 240px; max-width: 240px; }
+
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background-color: white !important;
+  color: #333 !important;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.list-wrapper:hover .scroll-btn { opacity: 1; }
+.scroll-btn.left { left: -20px; }
+.scroll-btn.right { right: -20px; }

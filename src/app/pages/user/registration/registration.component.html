@@ -23,94 +23,92 @@
   </section>
 
   <section class="form-section">
-    <!-- Step 1 -->
     <form *ngIf="carouselIndex === 0" [formGroup]="formStep1" class="form-container">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{ 'EMAIL_LABEL' | translate }}</mat-label>
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>{{ 'AUTH.EMAIL_LABEL' | translate }}</mat-label>
         <input matInput formControlName="email" type="email" />
 
         <mat-error *ngIf="hasDisplayableError(formStep1, 'email', isSubmittedStep1) && formStep1.get('email')?.hasError('required')">
-          {{ 'EMAIL_REQUIRED' | translate }}
+          {{ 'AUTH.EMAIL_REQUIRED' | translate }}
         </mat-error>
 
         <mat-error *ngIf="hasDisplayableError(formStep1, 'email', isSubmittedStep1) && formStep1.get('email')?.hasError('email')">
-          {{ 'EMAIL_INVALID' | translate }}
+          {{ 'AUTH.EMAIL_INVALID' | translate }}
         </mat-error>
       </mat-form-field>
     </form>
 
-    <!-- Step 2 -->
     <form *ngIf="carouselIndex === 1" [formGroup]="formStep2" class="form-container">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{ 'PASSWORD_LABEL' | translate }}</mat-label>
-        <input
-          matInput
-          [type]="hide ? 'password' : 'text'"
-          formControlName="password"
-          autocomplete="new-password"
-          (input)="checkPassword()"
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          type="button"
-          (click)="hide = !hide"
-        >
-          <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
+  
+  <mat-form-field appearance="fill" class="w-100">
+    <mat-label>{{ 'AUTH.PASSWORD_LABEL' | translate }}</mat-label>
+    <input
+      matInput
+      [type]="hide ? 'password' : 'text'"
+      formControlName="password"
+      autocomplete="new-password"
+      (input)="checkPassword()"
+    />
+    <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+      <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+  </mat-form-field>
 
-        <mat-hint align="start" class="password-hint">
-          <div [ngClass]="{ passed: hasLetter, failed: !hasLetter && isSubmittedStep2 }">
-            <mat-icon class="icon">{{ hasLetter ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
-            {{ 'PASSWORD_REQUIRE_LETTER' | translate }}
-          </div>
-          <div [ngClass]="{ passed: hasNumberOrSpecial, failed: !hasNumberOrSpecial && isSubmittedStep2 }">
-            <mat-icon class="icon">{{ hasNumberOrSpecial ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
-            {{ 'PASSWORD_REQUIRE_NUMBER' | translate }}
-          </div>
-          <div [ngClass]="{ passed: hasMinLength, failed: !hasMinLength && isSubmittedStep2 }">
-            <mat-icon class="icon">{{ hasMinLength ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
-            {{ 'PASSWORD_REQUIRE_LENGTH' | translate }}
-          </div>
-        </mat-hint>
-      </mat-form-field>
-    </form>
+  <div class="password-criteria">
+    <p class="criteria-header">{{ 'AUTH.PASSWORD_MUST_CONTAIN' | translate }}</p>
+    
+    <div class="criteria-item" [ngClass]="{ passed: hasLetter, failed: !hasLetter && isSubmittedStep2 }">
+      <mat-icon class="icon">{{ hasLetter ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+      <span>{{ 'AUTH.PASSWORD_CRITERIA_LETTER' | translate }}</span>
+    </div>
 
-    <!-- Step 3 -->
+    <div class="criteria-item" [ngClass]="{ passed: hasNumberOrSpecial, failed: !hasNumberOrSpecial && isSubmittedStep2 }">
+      <mat-icon class="icon">{{ hasNumberOrSpecial ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+      <span>{{ 'AUTH.PASSWORD_CRITERIA_NUMBER' | translate }}</span>
+    </div>
+
+    <div class="criteria-item" [ngClass]="{ passed: hasMinLength, failed: !hasMinLength && isSubmittedStep2 }">
+      <mat-icon class="icon">{{ hasMinLength ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+      <span>{{ 'AUTH.PASSWORD_CRITERIA_LENGTH' | translate }}</span>
+    </div>
+    
+  </div>
+</form>
+
     <form *ngIf="carouselIndex === 2" [formGroup]="formStep3" class="form-container" (ngSubmit)="submitAll()">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{ 'USERNAME_LABEL' | translate }}</mat-label>
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>{{ 'AUTH.USERNAME_LABEL' | translate }}</mat-label>
         <input matInput formControlName="username" />
       </mat-form-field>
 
       <div class="birthdate-fields">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>{{ 'DATE_OF_BIRTH_LABEL' | translate }}</mat-label>
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>{{ 'AUTH.DATE_OF_BIRTH_LABEL' | translate }}</mat-label>
           <input 
             matInput 
             [matDatepicker]="picker" 
             formControlName="dateOfBirth"
-            placeholder="{{ 'DATE_OF_BIRTH_PLACEHOLDER' | translate }}"
+            [placeholder]="'AUTH.DATE_OF_BIRTH_PLACEHOLDER' | translate"
           />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
 
           <mat-error *ngIf="hasDisplayableError(formStep3, 'dateOfBirth', isSubmittedStep3)">
-            {{ 'DATE_OF_BIRTH_REQUIRED' | translate }}
+            {{ 'AUTH.DATE_OF_BIRTH_REQUIRED' | translate }}
           </mat-error>
         </mat-form-field>
       </div>
 
       <div class="gender-group">
-        <label class="gender-label">{{ 'GENDER_LABEL' | translate }}</label>
-        <p class="gender-description">{{ 'GENDER_DESCRIPTION' | translate }}</p>
+        <label class="gender-label">{{ 'AUTH.GENDER_LABEL' | translate }}</label>
+        <p class="gender-description">{{ 'AUTH.GENDER_DESCRIPTION' | translate }}</p>
 
         <mat-radio-group formControlName="gender" class="gender-options">
-          <mat-radio-button class="gender-option" value="male">{{ 'GENDER_MALE' | translate }}</mat-radio-button>
-          <mat-radio-button class="gender-option" value="female">{{ 'GENDER_FEMALE' | translate }}</mat-radio-button>
-          <mat-radio-button class="gender-option" value="nonbinary">{{ 'GENDER_NONBINARY' | translate }}</mat-radio-button>
-          <mat-radio-button class="gender-option" value="other">{{ 'GENDER_OTHER' | translate }}</mat-radio-button>
-          <mat-radio-button class="gender-option" value="">{{ 'GENDER_PREFER_NOT' | translate }}</mat-radio-button>
+          <mat-radio-button class="gender-option" value="male">{{ 'AUTH.GENDER_MALE' | translate }}</mat-radio-button>
+          <mat-radio-button class="gender-option" value="female">{{ 'AUTH.GENDER_FEMALE' | translate }}</mat-radio-button>
+          <mat-radio-button class="gender-option" value="nonbinary">{{ 'AUTH.GENDER_NONBINARY' | translate }}</mat-radio-button>
+          <mat-radio-button class="gender-option" value="other">{{ 'AUTH.GENDER_OTHER' | translate }}</mat-radio-button>
+          <mat-radio-button class="gender-option" value="">{{ 'AUTH.GENDER_PREFER_NOT' | translate }}</mat-radio-button>
         </mat-radio-group>
       </div>
     </form>
@@ -118,16 +116,16 @@
 
   <section class="form-controls">
     <button mat-raised-button color="primary" *ngIf="carouselIndex < 2" (click)="onNext()">
-      {{ 'NEXT_BUTTON' | translate }}
+      {{ 'AUTH.NEXT_BUTTON' | translate }}
     </button>
 
-    <button mat-raised-button color="accent" *ngIf="carouselIndex === 2" (click)="submitAll()">
-      {{ 'REGISTER_BUTTON' | translate }}
+    <button mat-raised-button color="primary" *ngIf="carouselIndex === 2" (click)="submitAll()">
+      {{ 'AUTH.REGISTER_BUTTON' | translate }}
     </button>
   </section>
 
   <section class="account-description" *ngIf="carouselIndex === 0">
-    <div>{{ 'ALREADY_HAVE_ACCOUNT' | translate }}</div>
-    <button mat-button color="accent" [routerLink]="['/user/login']">{{ 'LOGIN_BUTTON' | translate }}</button>
+    <div>{{ 'AUTH.ALREADY_HAVE_ACCOUNT' | translate }}</div>
+    <button mat-button color="primary" [routerLink]="['/user/login']">{{ 'AUTH.LOGIN_BUTTON' | translate }}</button>
   </section>
 </main>

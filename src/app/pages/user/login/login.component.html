@@ -5,21 +5,21 @@
 
   <section class="form-section">
     <form [formGroup]="form" class="form-container">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{ 'EMAIL_LABEL' | translate }}</mat-label>
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>{{ 'AUTH.EMAIL_LABEL' | translate }}</mat-label>
         <input matInput formControlName="email" type="email" />
 
         <mat-error *ngIf="hasDisplayableError('email') && form.get('email')?.hasError('required')">
-          {{ 'EMAIL_REQUIRED' | translate }}
+          {{ 'AUTH.EMAIL_REQUIRED' | translate }}
         </mat-error>
 
         <mat-error *ngIf="hasDisplayableError('email') && form.get('email')?.hasError('email')">
-          {{ 'EMAIL_INVALID' | translate }}
+          {{ 'AUTH.EMAIL_INVALID' | translate }}
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{ 'PASSWORD_LABEL' | translate }}</mat-label>
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>{{ 'AUTH.PASSWORD_LABEL' | translate }}</mat-label>
         <input
           matInput
           [type]="hide ? 'password' : 'text'"
@@ -36,22 +36,22 @@
         </button>
 
         <mat-error *ngIf="hasDisplayableError('password')">
-          {{ 'PASSWORD_REQUIRED' | translate }}
+          {{ 'AUTH.PASSWORD_REQUIRED' | translate }}
         </mat-error>
       </mat-form-field>
     </form>
   </section>
 
   <section class="form-controls">
-    <button mat-raised-button color="accent" (click)="onLogin()">
-      {{ 'LOGIN_BUTTON' | translate }}
+    <button mat-raised-button color="primary" (click)="onLogin()">
+      {{ 'AUTH.LOGIN_BUTTON' | translate }}
     </button>
   </section>
 
   <section class="account-description">
-    <div>{{ 'NO_ACCOUNT' | translate }}</div>
-    <button mat-button color="accent" [routerLink]="['/user/register']">
-      {{ 'REGISTER_BUTTON' | translate }}
+    <div>{{ 'AUTH.NO_ACCOUNT' | translate }}</div>
+    <button mat-button color="primary" [routerLink]="['/user/register']">
+      {{ 'AUTH.REGISTER_BUTTON' | translate }}
     </button>
   </section>
 </main>

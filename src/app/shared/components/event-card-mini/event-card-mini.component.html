@@ -1,0 +1,49 @@
+<mat-card class="event-card shadow-sm h-100" [class.full-width]="fullWidth">
+  
+  <div class="image-container position-relative">
+    <img mat-card-image [src]="event.imageUrl | imageUrl" [alt]="event.title" class="event-image">
+    
+    <button 
+      *ngIf="isOwner" 
+      mat-mini-fab 
+      color="warn" 
+      class="delete-btn"
+      matTooltip="'EVENT.DELETE_TOOLTIP' | translate"
+      (click)="onDelete($event)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+
+  <mat-card-content class="p-3 d-flex flex-column flex-grow-1">
+    <div class="d-flex justify-content-between align-items-start mb-2">
+      <span class="badge badge-theme">{{ event.category }}</span>
+      <span class="price-tag fw-bold" [class.text-success]="event.price === 0">
+        {{ event.price === 0 ? ('COMMON.FREE' | translate) : event.price + ' ' + ('COMMON.PLN' | translate) }}
+      </span>
+    </div>
+    
+    <h5 class="card-title fw-bold text-truncate mb-2" [title]="event.title">
+      {{ event.title }}
+    </h5>
+    
+    <p class="card-text text-muted small mb-3">
+      <mat-icon class="small-icon" style="font-size: 16px; height: 16px; width: 16px; vertical-align: middle;">location_on</mat-icon> 
+      {{ event.city }}
+    </p>
+
+    <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top w-100">
+      
+      <div class="text-muted small d-flex align-items-center">
+        <mat-icon class="small-icon me-1" style="font-size: 16px; height: 16px; width: 16px;">calendar_today</mat-icon> 
+        <span>{{ event.startTime | date:'shortDate' }}</span>
+      </div>
+
+      <div class="d-flex align-items-center">
+        <mat-icon *ngIf="event.isInterested" class="liked-icon me-1" style="font-size: 18px; height: 18px; width: 18px;">favorite</mat-icon>
+        <mat-icon *ngIf="!event.isInterested" class="text-muted me-1" style="font-size: 18px; height: 18px; width: 18px;">favorite_border</mat-icon>
+        <span class="interest-count fw-bold small text-muted">{{ event.interestCount }}</span>
+      </div>
+
+    </div>
+  </mat-card-content>
+</mat-card>

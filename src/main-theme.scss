@@ -1,0 +1,117 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+// --- PALETA ZIELONA (SWATCH 1) ---
+$light-green-palette: (
+  50:  #e8fff0, // Tło strony / Inputy
+  100: #cbfbe0,
+  200: #aaf7cf,
+  300: #88f2be,
+  400: #6eeafa,
+  500: #006a43, // Ciemna zieleń (Primary Button)
+  600: #00623d,
+  700: #005734,
+  800: #004d2c,
+  900: #003b1e, // Bardzo ciemna zieleń (Tekst)
+  contrast: (
+    500: #ffffff,
+    50: #003b1e, // Tekst na jasnym tle to ciemna zieleń
+  )
+);
+
+// --- PALETA RÓŻOWA (SWATCH 2) ---
+$light-pink-palette: (
+  50:  #ffe5f6, // Tło Navbara
+  100: #ffbfe6,
+  200: #ff94d4,
+  300: #ff69c2,
+  400: #ff47b4,
+  500: #d60086, // Ciemny róż (Accent Button)
+  600: #cc007e,
+  700: #c00073,
+  800: #b40069,
+  900: #660040, // Bardzo ciemny róż/śliwka (Tekst w navbarze)
+  A100: #ffffff,
+  A200: #ffe5f6,
+  A400: #ff47b4,
+  A700: #c00073,
+  contrast: (
+    500: #ffffff,
+    50: #660040, // Tekst na różowym tle
+  )
+);
+
+$my-warn-palette: (
+  50: #ffebee, 100: #ffcdd2, 200: #ef9a9a, 300: #e57373, 400: #ef5350,
+  500: #f44336, 600: #e53935, 700: #d32f2f, 800: #c62828, 900: #b71c1c,
+  A100: #ff8a80, A200: #ff5252, A400: #ff1744, A700: #d50000,
+  contrast: (500: #ffffff)
+);
+
+$my-light-primary: mat.m2-define-palette($light-green-palette, 500);
+$my-light-accent:  mat.m2-define-palette($light-pink-palette, 500);
+$my-light-warn:    mat.m2-define-palette($my-warn-palette, 500); 
+
+$my-light-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $my-light-primary,
+    accent: $my-light-accent,
+    warn: $my-light-warn,
+  )
+));
+
+@include mat.all-component-themes($my-light-theme);
+
+// --- GLOBALNE STYLE (SWATCH 1 - ZIELONY KONTEKST) ---
+
+html, body {
+  // Tło: Jasna zieleń (#e8fff0)
+  background-color: map-get($light-green-palette, 50); 
+  // Tekst: Ciemna zieleń (#003b1e)
+  color: map-get($light-green-palette, 900); 
+}
+
+// Inputy (Swatch 1)
+.mat-mdc-form-field {
+  .mdc-text-field--filled, .mdc-text-field--outlined {
+    background-color: map-get($light-green-palette, 50) !important;
+    border-radius: 8px !important;
+    border: none !important;
+  }
+  .mdc-line-ripple {
+    display: none !important;
+  }
+  // Kolor tekstu w inpucie: Ciemna zieleń
+  .mdc-text-field__input {
+    color: map-get($light-green-palette, 900) !important;
+  }
+  // Label: Nieco jaśniejsza zieleń
+  .mdc-floating-label {
+    color: map-get($light-green-palette, 700) !important;
+  }
+}
+
+// Przyciski "Secondary" (Outline) - kolor tekstu i ramki
+.mat-mdc-outlined-button.mat-primary {
+  border-color: map-get($light-green-palette, 500) !important;
+  color: map-get($light-green-palette, 500) !important;
+}
+.mat-mdc-outlined-button.mat-accent {
+  border-color: map-get($light-pink-palette, 500) !important;
+  color: map-get($light-pink-palette, 500) !important;
+}
+
+// Zaokrąglenia
+.mat-mdc-raised-button, .mat-mdc-outlined-button, .mat-mdc-unelevated-button, .mat-mdc-flat-button {
+  border-radius: 8px !important;
+}
+.text-pink {
+  color: map-get($light-pink-palette, 500) !important; 
+}
+
+// Opcjonalnie: Tło różowe (gdybyś potrzebował w przyszłości)
+.bg-pink {
+  background-color: map-get($light-pink-palette, 500) !important;
+  color: white !important;
+}

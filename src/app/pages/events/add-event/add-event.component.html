@@ -1,0 +1,94 @@
+<h2 mat-dialog-title>{{ (isEditMode ? 'EVENT.EDIT_TITLE' : 'EVENT.ADD_TITLE') | translate }}</h2>
+
+<mat-dialog-content class="p-0"> 
+  <form [formGroup]="form" class="event-creator-card border-0 shadow-none">
+    
+    <div 
+      class="image-upload-zone" 
+      [class.drag-over]="isDragOver"
+      (drop)="onDrop($event)"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (click)="fileInput.click()"
+    >
+      <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*">
+
+      <ng-container *ngIf="previewUrl">
+        <img [src]="previewUrl | imageUrl" class="preview-image">
+        <div class="change-overlay">{{ 'EVENT.CHANGE_PHOTO_HINT' | translate }}</div>
+      </ng-container>
+
+      <div *ngIf="!previewUrl" class="upload-placeholder">
+        <mat-icon>add_photo_alternate</mat-icon>
+        <p class="m-0 fw-bold">{{ 'EVENT.ADD_PHOTO_PLACEHOLDER' | translate }}</p>
+        <p class="small text-muted">{{ 'EVENT.DRAG_DROP_HINT' | translate }}</p>
+      </div>
+    </div>
+
+    <div class="event-body">
+      
+      <div class="mb-2">
+         <select formControlName="categoryId" class="ghost-input text-uppercase fw-bold text-muted small" style="width: auto;">
+             <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+         </select>
+      </div>
+
+      <input 
+        formControlName="title" 
+        class="ghost-input title-input" 
+        [placeholder]="'EVENT.TITLE_PLACEHOLDER' | translate"
+        autocomplete="off"
+      >
+
+      <div class="meta-row">
+        
+        <div class="meta-item">
+          <mat-icon class="meta-icon">calendar_today</mat-icon>
+          <div class="d-flex flex-column">
+             <input type="datetime-local" formControlName="startDateTime" class="ghost-input meta-input">
+             <input type="datetime-local" formControlName="endDateTime" class="ghost-input meta-input small text-muted">
+          </div>
+        </div>
+
+        <div class="meta-item">
+          <mat-icon class="meta-icon">location_on</mat-icon>
+          <input formControlName="city" class="ghost-input meta-input" [placeholder]="'EVENT.CITY_PLACEHOLDER' | translate">
+        </div>
+
+        <div class="meta-item">
+          <mat-icon class="meta-icon">confirmation_number</mat-icon>
+          <div class="d-flex align-items-center">
+            <input type="number" formControlName="price" class="ghost-input meta-input" placeholder="0" style="width: 80px;">
+            <span class="ms-1">{{ 'COMMON.PLN' | translate }}</span>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="opacity-25 my-4">
+
+      <h5 class="fw-bold mb-3 text-muted">{{ 'EVENT.DESCRIPTION_HEADER' | translate }}</h5>
+      
+      <textarea 
+        formControlName="description" 
+        class="description-area" 
+        [placeholder]="'EVENT.DESCRIPTION_PLACEHOLDER' | translate"
+      ></textarea>
+
+    </div>
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+  
+  <button 
+    mat-flat-button 
+    color="primary" 
+    (click)="onSubmit()" 
+    [disabled]="form.invalid || isSubmitting">
+    <mat-icon>check</mat-icon> 
+    {{ (isEditMode ? 'EVENT.SAVE_CHANGES_BUTTON' : 'EVENT.PUBLISH_BUTTON') | translate }}
+  </button>
+</mat-dialog-actions>

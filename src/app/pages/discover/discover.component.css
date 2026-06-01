@@ -1,0 +1,295 @@
+/* --- UKŁAD (LAYOUT) --- */
+.sidebar {
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  
+  /* KOLORYSTYKA RÓŻOWA (Ciemniejsza niż Navbar) */
+  background-color: #ffbfe6; /* Pink 100 */
+  color: #660040;          /* Dark Pink Text */
+  border-right: 1px solid #ff94d4; /* Opcjonalna ramka */
+}
+
+.top-bar {
+  z-index: 100;
+  position: sticky;
+  top: 0; /* WAŻNE DLA STICKY */
+  
+  /* KOLORYSTYKA RÓŻOWA (Ciemniejsza niż Navbar) */
+  background-color: #ffbfe6; /* Pink 100 */
+  color: #660040;          /* Dark Pink Text */
+  justify-content: space-between;
+}
+
+/* --- ZMIANA KOLORÓW INPUTÓW W SIDEBARZE (Kontekst Różowy) --- */
+.sidebar ::ng-deep .mat-mdc-form-field .mdc-text-field--filled,
+.sidebar ::ng-deep .mat-mdc-form-field .mdc-text-field--outlined {
+  background-color: #ffffff !important; /* Białe tło inputa */
+  color: #660040 !important;
+  border-radius: 8px; /* Lekkie zaokrąglenie */
+}
+
+/* Kolor etykiet (Label) w sidebarze */
+.sidebar ::ng-deep .mdc-floating-label,
+.sidebar ::ng-deep .mat-mdc-select-value {
+  color: #660040 !important;
+}
+
+/* Kolor strzałki w selectach */
+.sidebar ::ng-deep .mat-mdc-select-arrow {
+  color: #660040 !important;
+}
+
+/* Kolor suwaka (Slider) - musi być różowy */
+.sidebar ::ng-deep .mat-mdc-slider {
+  --mdc-slider-handle-color: #d60086;
+  --mdc-slider-focus-handle-color: #d60086;
+  --mdc-slider-hover-handle-color: #d60086;
+  --mdc-slider-active-track-color: #d60086;
+  --mdc-slider-inactive-track-color: #ffe5f6;
+}
+
+/* Kolor checkboxa - musi być różowy */
+.sidebar ::ng-deep .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
+  background-color: #d60086 !important;
+  border-color: #d60086 !important;
+}
+
+/* --- ZMIANA KOLORÓW W TOP-BARZE (Sortowanie) --- */
+.top-bar ::ng-deep .mat-mdc-form-field .mdc-text-field--filled {
+  background-color: #ffe5f6 !important;
+  color: #660040 !important;
+  align-items: center;
+}
+.top-bar ::ng-deep .mat-mdc-select-value,
+.top-bar ::ng-deep .mat-mdc-select-arrow {
+  color: #660040 !important;
+}
+
+.sort-select {
+  width: 140px;
+}
+.sort-select ::ng-deep .mat-mdc-form-field-flex {
+   height: 36px !important;
+   align-items: center;
+}
+.sort-select ::ng-deep .mat-mdc-form-field-wrapper {
+  padding-bottom: 0;
+}
+.sort-select ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+/* --- KONTAINER PRZEWIJANIA --- */
+.list-wrapper {
+  position: relative;
+}
+
+.horizontal-scroll-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 4px;
+  
+  /* Ukrycie paska przewijania */
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE/Edge */
+  
+  /* Płynne przewijanie przy kliknięciu przycisków */
+  scroll-behavior: smooth;
+}
+
+.horizontal-scroll-container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Opera */
+}
+
+/* --- PRZYCISKI PRZEWIJANIA --- */
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%); /* Idealne wyśrodkowanie w pionie */
+  z-index: 10;
+  
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  color: #660040 !important;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+  
+  opacity: 0; /* Domyślnie ukryte */
+  transition: opacity 0.3s ease, transform 0.2s;
+}
+
+.list-wrapper:hover .scroll-btn {
+  opacity: 1;
+}
+
+.scroll-btn:hover {
+  background-color: white !important;
+  transform: translateY(-50%) scale(1.1); /* Lekkie powiększenie po najechaniu */
+}
+
+.scroll-btn.left { left: -20px; }
+.scroll-btn.right { right: -10px; }
+
+/* --- KARTY WYDARZEŃ --- */
+.event-card-wrapper {
+  flex: 0 0 280px;
+  max-width: 280px;
+}
+
+.event-card {
+  transition: transform 0.2s;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+}
+
+.event-image {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.small-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
+  margin-right: 4px;
+}
+
+.section-title {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+/* --- WYSZUKIWARKA W TOP BARZE (POPRAWKA) --- */
+.search-bar-container {
+  /* POPRAWKA: Usunięto position: absolute i sztywne min-width */
+  position: relative;        
+  min-width: 0;              /* Pozwala kontenerowi się kurczyć */
+  max-width: 800px;          /* Ogranicza maksymalną szerokość dla estetyki */
+  width: 100%;               /* Wypełnia dostępną przestrzeń flex */
+  /* Centrowanie jest teraz obsługiwane przez marginy w HTML (mx-auto lub flex) */
+}
+
+/* 1. Stylizacja głównego "pudełka" */
+.search-field ::ng-deep .mat-mdc-form-field-flex {
+  background-color: #ffffff !important;
+  border-radius: 24px !important;  /* Mocne zaokrąglenie */
+  padding-left: 15px !important;   /* Odstęp wewnątrz */
+  height: 40px !important;         /* Sztywna wysokość */
+  align-items: center !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+  border: 1px solid transparent; /* Rezerwa na border */
+}
+
+/* 2. Ukrycie ramki Material Design */
+.search-field ::ng-deep .mdc-notched-outline {
+  display: none !important; 
+}
+
+/* 3. Usuwamy domyślne tła i paddingi */
+.search-field ::ng-deep .mat-mdc-text-field-wrapper {
+  padding: 0 !important;
+  background-color: transparent !important;
+}
+
+/* 4. Reset wysokości wewnętrznych elementów */
+.search-field ::ng-deep .mat-mdc-form-field-infix {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  min-height: unset !important;
+  height: auto !important;
+  border-top: 0 !important;
+}
+
+/* 5. Wyśrodkowanie tekstu */
+.search-field ::ng-deep input.mat-mdc-input-element {
+  margin-top: -2px; /* Drobna korekta pionowa */
+  color: #660040 !important;
+}
+
+.search-field ::ng-deep .mdc-line-ripple { display: none; }
+.search-field ::ng-deep input::placeholder { color: #a86b91 !important; }
+.search-field .mat-icon { color: #660040; margin-right: 5px; } 
+.search-field ::ng-deep .mat-mdc-form-field-subscript-wrapper { display: none; }
+
+
+/* ================================================================= */
+/* --- SKELETON LOADER (MIGAJĄCE KAFELKI) --- */
+/* ================================================================= */
+
+/* Animacja pulsowania (migania) */
+@keyframes pulse-gray {
+  0% { background-color: #e0e0e0; }
+  50% { background-color: #f0f0f0; }
+  100% { background-color: #e0e0e0; }
+}
+
+.skeleton-container {
+  width: 100%;
+  padding-bottom: 2rem;
+}
+
+/* Pojedyncza "fałszywa" sekcja */
+.skeleton-section {
+  margin-bottom: 3rem;
+}
+
+/* Fałszywy tytuł sekcji */
+.skeleton-title {
+  height: 32px;
+  width: 200px;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  animation: pulse-gray 1.5s infinite ease-in-out;
+}
+
+/* Kontener na fałszywe karty (poziomy scroll) */
+.skeleton-row {
+  display: flex;
+  gap: 1rem; /* Zgodne z horizontal-scroll-container */
+  overflow: hidden; /* Ukrywamy nadmiar */
+}
+
+/* Fałszywa karta */
+.skeleton-card {
+  flex: 0 0 280px; /* Szerokość zgodna z event-card-wrapper */
+  height: 280px;   /* Wysokość przybliżona */
+  border-radius: 12px;
+  background-color: white;
+  border: 1px solid #f0f0f0;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fałszywy obrazek w karcie */
+.skeleton-card-img {
+  width: 100%;
+  height: 160px; /* Wysokość zgodna z event-image */
+  animation: pulse-gray 1.5s infinite ease-in-out;
+}
+
+/* Fałszywa treść pod obrazkiem */
+.skeleton-card-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-text-line {
+  height: 12px;
+  border-radius: 4px;
+  animation: pulse-gray 1.5s infinite ease-in-out;
+}
+
+/* Różne długości linii tekstu dla realizmu */
+.w-80 { width: 80%; }
+.w-60 { width: 60%; }
+.w-40 { width: 40%; }

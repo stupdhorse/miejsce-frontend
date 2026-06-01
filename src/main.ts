@@ -1,31 +1,37 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
-import { provideHttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, HttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
-import { importProvidersFrom } from '@angular/core';
-import { TranslateModule, TranslateService} from '@ngx-translate/core';
-import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { routes } from './app/app.routes';
-import { AuthInterceptor } from './app/shared/services/auth.interceptor';
+import { authInterceptor } from './app/shared/services/auth.interceptor';
+import { Observable } from 'rxjs';
+
+export class CustomLoader implements TranslateLoader {
+  constructor(private http: HttpClient) {}
+
+  getTranslation(lang: string): Observable<any> {
+    return this.http.get(`/assets/i18n/${lang}.json`);
+  }
+}
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new CustomLoader(http);
+}
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    provideHttpClient(),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    },
-    importProvidersFrom(
-      TranslateModule.forRoot({
-        defaultLanguage: 'pl',
-        loader: provideTranslateHttpLoader({
-          prefix: './assets/i18n/',
-          suffix: '.json'
-        })
-      })
+    provideHttpClient(
+      withInterceptors([authInterceptor]) 
     ),
-    TranslateService
+    provideTranslateService({
+      defaultLanguage: 'en',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
 }).catch(err => console.error(err));

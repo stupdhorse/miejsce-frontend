@@ -12,7 +12,7 @@ import { AuthService } from '../../../shared/services/auth.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -40,7 +40,7 @@ export class LoginComponent {
 form:FormGroup;
 hide = true;
 submitted = false;
-constructor(private fb:FormBuilder, private service: AuthService)
+constructor(private fb:FormBuilder, private service: AuthService, private router: Router)
 {
   this.form = this.fb.group({
     email: ['',[Validators.required,Validators.required]],
@@ -68,7 +68,7 @@ onLogin()
     Password: this.form.value.password
   }
   this.service.SignInUser(formData).subscribe({
-      next: (res) => console.log("Login successful", res),
+      next: () => this.router.navigate(['/discover']),
       error: (err) => console.error("Login failed", err)
   })
 }

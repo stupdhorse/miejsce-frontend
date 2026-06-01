@@ -74,10 +74,10 @@ export class RegistrationComponent {
   }
 
 getStepTitle(): string {
-    switch (this.carouselIndex) {
-      case 0: return 'Step 1 of 3';
-      case 1: return 'Step 2 of 3';
-      case 2: return 'Step 3 of 3';
+switch (this.carouselIndex) {
+      case 0: return 'AUTH.STEP_1';
+      case 1: return 'AUTH.STEP_2';
+      case 2: return 'AUTH.STEP_3';
       default: return '';
     }
   }
@@ -118,11 +118,12 @@ submitAll() {
     const { dateOfBirth, gender, username } = this.formStep3.value;
 
     const formData = {
-      Username: this.formStep1.value.email, // backend traktuje to jako Username
+      Email: this.formStep1.value.email,
+      Username: username,
       Password: this.formStep2.value.password,
       Gender: gender,
-      DateOfBirth: dateOfBirth, // JS Date -> JSON -> C# DateTime
-      City: '' // jeśli nie masz w formularzu
+      DateOfBirth: dateOfBirth,
+      City: ''
     };
 
 

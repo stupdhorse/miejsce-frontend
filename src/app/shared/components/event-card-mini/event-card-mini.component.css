@@ -1,0 +1,86 @@
+.event-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  overflow: hidden;
+  border: none; /* Opcjonalnie: usuwa domyślne ramki Bootstrapa dla czystszego wyglądu */
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; /* Efekt cienia przy uniesieniu */
+}
+
+.event-image {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  width: 100%;
+  background-color: #e0e0e0; /* Szare tło zanim załaduje się obrazek */
+  display: block;
+}
+
+.card-title {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+/* --- Style dla badge'a kategorii --- */
+.badge-theme {
+  background-color: #e91e63; /* Kolor przewodni (różowy) */
+  color: white;
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 700;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* --- Styl ceny --- */
+.price-tag {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* --- Ujednolicenie małych ikon (zastępuje style inline) --- */
+.small-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  vertical-align: text-bottom;
+}
+
+/* --- Ikona polubienia (czerwone serce) --- */
+.liked-icon {
+  color: #e91e63; /* Kolor 'warn' z palety Material */
+}
+
+/* --- Licznik zainteresowań --- */
+.interest-count {
+  font-size: 0.85rem;
+}
+
+/* --- Opcjonalnie: Pełna szerokość --- */
+.full-width {
+  width: 100%;
+}
+.image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  transform: scale(0.8); /* Zmniejszamy nieco przycisk */
+  opacity: 0; /* Domyślnie ukryty */
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 10;
+}
+
+/* Pokazujemy przycisk dopiero po najechaniu na kartę (elegancki efekt) */
+.event-card:hover .delete-btn {
+  opacity: 1;
+  transform: scale(1);
+}

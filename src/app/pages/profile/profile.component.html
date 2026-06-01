@@ -1,0 +1,157 @@
+<div *ngIf="isSidebarOpen" class="backdrop" (click)="toggleSidebar()"></div>
+
+<aside *ngIf="isSidebarOpen" class="sidebar p-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="m-0 fw-bold">{{ 'PROFILE.OPTIONS_TITLE' | translate }}</h4>
+    <button mat-icon-button (click)="toggleSidebar()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="d-flex flex-column gap-2">
+    <button mat-button class="sidebar-btn" (click)="editProfile()">
+      <mat-icon>edit</mat-icon> {{ 'PROFILE.EDIT_PROFILE' | translate }}
+    </button>
+    
+    <button mat-button class="sidebar-btn" (click)="searchFriends()">
+      <mat-icon>person_add</mat-icon> {{ 'PROFILE.SEARCH_FRIENDS' | translate }}
+    </button>
+    
+    <button mat-button class="sidebar-btn" (click)="accountSettings()">
+      <mat-icon>settings</mat-icon> {{ 'PROFILE.ACCOUNT_SETTINGS' | translate }}
+    </button>
+
+    <hr class="text-pink opacity-50">
+
+    <button mat-button class="sidebar-btn text-danger" (click)="logout()">
+      <mat-icon>logout</mat-icon> {{ 'PROFILE.LOGOUT' | translate }}
+    </button>
+  </div>
+</aside>
+
+<div *ngIf="currentUser">
+  
+  <header class="profile-header">
+    <div class="header-content container">
+      
+      <div class="avatar-wrapper shadow-lg">
+        <img [src]="currentUser.avatarUrl | imageUrl" alt="Avatar" class="avatar-img">
+      </div>
+      
+      <div class="user-info">
+        <span class="label uppercase">{{ 'PROFILE.LABEL' | translate }}</span>
+        <h1 class="username">{{ currentUser.username }}</h1>
+        
+        <div class="user-stats">
+          <span class="stat-text">{{ currentUser.eventsCount }} {{ 'PROFILE.STATS_EVENTS' | translate }}</span>
+          <span class="dot">•</span>
+          <span class="stat-text">{{ currentUser.friendsCount }} {{ 'PROFILE.STATS_FRIENDS' | translate }}</span>
+        </div>
+        
+        <div class="mt-3" *ngIf="!currentUser.isMe && !isFollowing">
+            <button mat-stroked-button class="text-white border-white">{{ 'PROFILE.FOLLOW_BUTTON' | translate }}</button>
+        </div>
+      </div>
+
+      <div class="ms-auto align-self-start" *ngIf="currentUser.isMe">
+        <button mat-icon-button (click)="toggleSidebar()" class="text-white" matTooltip="Opcje profilu">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <div class="profile-content container py-4">
+    
+    <section class="content-section mb-5">
+      <div class="d-flex justify-content-between align-items-center mb-3" *ngIf="friends.length>0">
+        <h2 class="section-title">{{ 'PROFILE.FRIENDS_SECTION' | translate }}</h2>
+        <span class="show-all text-muted cursor-pointer">{{ 'PROFILE.SHOW_ALL' | translate }}</span>
+      </div>
+      <div class="friends-grid">
+        <div class="friend-item" *ngFor="let friend of friends" (click)="openProfile(friend.id)">
+          <div class="friend-avatar-wrapper shadow-sm">
+            <img [src]="friend.img" [alt]="friend.name">
+          </div>
+          <span class="friend-name">{{ friend.name }}</span>
+          <span class="friend-role">{{ 'PROFILE.FRIEND_ROLE' | translate }}</span>
+        </div>
+      </div>
+    </section>
+
+<section class="content-section mb-5" *ngIf="currentUser.isMe && pendingRequests.length > 0">
+      <h2 class="section-title mb-3">{{ 'PROFILE.FRIEND_REQUESTS' | translate }}</h2>
+      
+      <div class="row g-3">
+        <div class="col-md-6 col-lg-4" *ngFor="let req of pendingRequests">
+          <mat-card class="p-2 d-flex flex-row align-items-center justify-content-between">
+            
+            <div class="d-flex align-items-center gap-2 overflow-hidden">
+              <img [src]="(req.sender.basicInfo?.avatarUrl || 'assets/default.png') | imageUrl" 
+                   class="rounded-circle flex-shrink-0" 
+                   style="width: 40px; height: 40px; object-fit: cover;">
+                   
+              <strong class="text-truncate" [matTooltip]="req.sender.basicInfo?.username">
+                {{ req.sender.basicInfo?.username }}
+              </strong>
+            </div>
+
+            <div class="d-flex gap-1 flex-shrink-0 ms-2">
+              <button mat-icon-button color="accent" (click)="acceptRequest(req.id)" matTooltip="Akceptuj">
+                <mat-icon>check</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="declineRequest(req.id)" matTooltip="Odrzuć">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+
+          </mat-card>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section mb-5 position-relative" *ngIf="createdEvents.length > 0">
+      <h2 class="section-title mb-3">
+        {{ currentUser.isMe ? ('PROFILE.MY_EVENTS' | translate) : ('PROFILE.USER_EVENTS' | translate:{username: currentUser.username}) }}
+      </h2>
+      
+      <div class="list-wrapper">
+        <button mat-mini-fab class="scroll-btn left" (click)="scrollList(createdList, 'left')">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <div class="horizontal-scroll-container" #createdList>
+          <div class="event-card-wrapper" *ngFor="let event of createdEvents">
+            <app-event-card-mini [event]="event" (click)="openEventDetails(event)" (deleted)="onEventDeleted($event)"></app-event-card-mini>
+          </div>
+        </div>
+
+        <button mat-mini-fab class="scroll-btn right" (click)="scrollList(createdList, 'right')">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </section>
+
+    <section class="content-section mb-5 position-relative" *ngIf="interestedEvents.length > 0">
+      <h2 class="section-title mb-3">{{ 'PROFILE.INTERESTS_SECTION' | translate }}</h2>
+      
+      <div class="list-wrapper">
+        <button mat-mini-fab class="scroll-btn left" (click)="scrollList(interestedList, 'left')">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <div class="horizontal-scroll-container" #interestedList>
+          <div class="event-card-wrapper" *ngFor="let event of interestedEvents">
+            <app-event-card-mini [event]="event" (click)="openEventDetails(event)" (deleted)="onEventDeleted($event)"></app-event-card-mini>
+          </div>
+        </div>
+
+        <button mat-mini-fab class="scroll-btn right" (click)="scrollList(interestedList, 'right')">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </section>
+
+  </div>
+</div>
